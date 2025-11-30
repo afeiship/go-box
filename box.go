@@ -56,6 +56,7 @@ func getRuneWidth(r rune) int {
 		r == 0x274C || // ❌ Cross mark
 		r == 0x2611 || // ☑️ Ballot box with check
 		r == 0x2714 || // ✔️ Heavy check mark
+		r == 0x2713 || // ✓ Check mark
 		r == 0x1F4E6 || // 📦 Package
 		r == 0x1F9EA || // 🧪 Test tube
 		r == 0x1F680 || // 🚀 Rocket
