@@ -1,0 +1,11 @@
+{
+  "name": "@jswork/go-box",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Simple ASCII box drawing for Go CLI apps.",
+  "license": "MIT",
+  "scripts": {
+    "test": "go test __tests__/*.go -v",
+    "release": "release-it"
+  }
+}
