@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"time"
-	box "github.com/afeiship/box"
+	box "github.com/afeiship/go-box"
 )
 
 func main() {

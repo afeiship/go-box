@@ -7,7 +7,7 @@ import (
 	"strings"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
-	box "github.com/afeiship/box"
+	box "github.com/afeiship/go-box"
 )
 
 func main() {

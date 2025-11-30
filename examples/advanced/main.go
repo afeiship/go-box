@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	box "github.com/afeiship/box"
+	box "github.com/afeiship/go-box"
 )
 
 func main() {
