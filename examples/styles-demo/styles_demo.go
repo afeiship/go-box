@@ -28,10 +28,6 @@ func main() {
 	}
 	box.PrintBoxWithOptions(lines, opts)
 
-	fmt.Println("\n🔸 单线框:")
-	opts.BorderStyle = "single"
-	box.PrintBoxWithOptions(lines, opts)
-
 	fmt.Println("\n🔹 缩进 + ASCII 风格:")
 	opts.BorderStyle = "ascii"
 	opts.Indent = 4

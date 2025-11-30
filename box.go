@@ -80,7 +80,7 @@ type BoxOptions struct {
 func DefaultBoxOptions() *BoxOptions {
 	return &BoxOptions{
 		Padding:     0,
-		BorderStyle: "round", // round, double, single
+		BorderStyle: "round", // round, double, ascii
 		Indent:      0,
 	}
 }
@@ -123,9 +123,6 @@ func PrintBoxWithOptions(lines []string, opts *BoxOptions) {
 	case "double":
 		hBorder, vBorder = "═", "║"
 		tlCorner, trCorner, blCorner, brCorner = "╔", "╗", "╚", "╝"
-	case "single":
-		hBorder, vBorder = "─", "│"
-		tlCorner, trCorner, blCorner, brCorner = "┌", "┐", "└", "┘"
 	case "ascii":
 		hBorder, vBorder = "-", "|"
 		tlCorner, trCorner, blCorner, brCorner = "+", "+", "+", "+"
