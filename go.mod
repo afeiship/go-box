@@ -1,3 +1,5 @@
 module github.com/afeiship/box
 
-go 1.21.0
+go 1.24.0
+
+require golang.org/x/text v0.31.0 // indirect

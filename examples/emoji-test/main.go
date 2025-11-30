@@ -13,7 +13,7 @@ func main() {
 	testCases := [][]string{
 		{
 			"✅ Success",
-			"⚠️  Warning",
+			"⚠️ Warning",
 			"❌ Error",
 		},
 		{
