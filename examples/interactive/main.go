@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 	box "github.com/afeiship/box"
 )
 
@@ -39,8 +41,9 @@ func main() {
 		fmt.Println("======================")
 
 		styles := []string{"round", "single", "double"}
+		caser := cases.Title(language.English)
 		for _, style := range styles {
-			fmt.Printf("\n%s style:\n", strings.Title(style))
+			fmt.Printf("\n%s style:\n", caser.String(style))
 			opts := &box.BoxOptions{
 				BorderStyle: style,
 				Padding:     0,
