@@ -186,6 +186,9 @@ func PrintBoxWithOptions(lines []string, opts *BoxOptions) {
 	case "single":
 		hBorder, vBorder = "─", "│"
 		tlCorner, trCorner, blCorner, brCorner = "┌", "┐", "└", "┘"
+	case "ascii":
+		hBorder, vBorder = "-", "|"
+		tlCorner, trCorner, blCorner, brCorner = "+", "+", "+", "+"
 	default: // round
 		hBorder, vBorder = "─", "│"
 		tlCorner, trCorner, blCorner, brCorner = "┌", "┐", "└", "┘"
@@ -202,4 +205,15 @@ func PrintBoxWithOptions(lines []string, opts *BoxOptions) {
 		fmt.Printf("%s%s %s%s %s\n", indent, vBorder, line, padding, vBorder)
 	}
 	fmt.Printf("%s%s%s%s\n", indent, blCorner, strings.Repeat(hBorder, maxLen+2), brCorner)
+}
+
+// PrintASCIIBox prints text surrounded by ASCII box characters (+---+).
+// This is a convenience function that uses ASCII border style.
+func PrintASCIIBox(lines []string) {
+	opts := &BoxOptions{
+		Padding:     0,
+		BorderStyle: "ascii",
+		Indent:      0,
+	}
+	PrintBoxWithOptions(lines, opts)
 }
