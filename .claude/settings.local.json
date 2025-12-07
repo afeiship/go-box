@@ -6,7 +6,8 @@
       "Bash(go mod tidy:*)",
       "Bash(printf:*)",
       "Bash(python3:*)",
-      "Bash(go test:*)"
+      "Bash(go test:*)",
+      "Bash(mkdir:*)"
     ],
     "deny": [],
     "ask": []
