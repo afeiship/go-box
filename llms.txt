@@ -1,0 +1,584 @@
+# Go-Box
+> Go-Box is a lightweight Go library for creating ASCII/Unicode text boxes in command-line applications. It provides beautifully crafted box drawing with multiple border styles, accurate Unicode width calculation, ANSI color support, and a simple, intuitive API.
+All components are written in pure Go with zero external dependencies for core functionality. The library handles complex Unicode characters (emojis, CJK text), ANSI color codes, and provides flexible customization options including padding, indentation, and border styles.
+
+**Important notes for agents:**
+- Go-Box provides three border styles: round (default Unicode), double (Unicode), and ASCII (pure ASCII characters)
+- The library uses `github.com/mattn/go-runewidth` for accurate Unicode character width calculation
+- ANSI color codes are automatically filtered out during width calculation to ensure perfect alignment
+- All functions handle empty input gracefully and support multi-line text content
+- The library is cross-platform and works on Windows, macOS, and Linux
+
+## Documentation
+- [Repository](https://github.com/afeiship/go-box): Main repository with source code, examples, and documentation.
+- [AI Usage Guide](docs/ai-usage-guide.md): Comprehensive guide for AI assistants including common use cases, integration tips, and troubleshooting.
+
+## Key Features
+- **Multiple Border Styles:** Three built-in styles - round (Unicode, default), double (Unicode), and ASCII (pure ASCII)
+- **Unicode Support:** Proper width calculation for emojis, CJK characters (Chinese, Japanese, Korean), and special Unicode symbols
+- **ANSI Color Compatible:** Automatic filtering of ANSI escape sequences ensures perfect alignment with colored text
+- **Customizable Options:** Configurable padding, indentation, and border styles
+- **Simple API:** Three main functions for different use cases - from basic to advanced
+- **Cross-Platform:** Works seamlessly across Windows, macOS, and Linux
+- **Zero Core Dependencies:** Core functionality uses only Go standard library
+
+## Installation
+### Go Module Installation
+Add go-box to your project using `go get`:
+
+```bash
+go get github.com/afeiship/go-box
+```
+
+### Import in Your Code
+```go
+import "github.com/afeiship/go-box"
+```
+
+### Dependencies
+The library requires two dependencies:
+- `golang.org/x/text v0.31.0` - Text processing utilities
+- `github.com/mattn/go-runewidth v0.0.19` - Unicode width calculation
+
+These are automatically installed when you run `go get`.
+
+## API Reference
+### Public Functions
+
+#### `PrintBox(lines []string)`
+Creates a box with default round style Unicode borders. This is the simplest way to create a box.
+
+**Parameters:**
+- `lines []string`: Array of text lines to display inside the box
+
+**Example:**
+```go
+lines := []string{
+    "Hello, World!",
+    "This is a simple box",
+}
+box.PrintBox(lines)
+```
+
+**Output:**
+```
+┌─────────────────────┐
+│ Hello, World!       │
+│ This is a simple box│
+└─────────────────────┘
+```
+
+#### `PrintASCIIBox(lines []string)`
+Creates a box using pure ASCII characters. Best for maximum terminal compatibility.
+
+**Parameters:**
+- `lines []string`: Array of text lines to display inside the box
+
+**Example:**
+```go
+lines := []string{"ASCII Only", "Pure characters"}
+box.PrintASCIIBox(lines)
+```
+
+**Output:**
+```
++------------------+
+| ASCII Only       |
+| Pure characters  |
++------------------+
+```
+
+#### `PrintBoxWithOptions(lines []string, opts *BoxOptions)`
+Creates a box with full customization options for padding, indentation, and border styles.
+
+**Parameters:**
+- `lines []string`: Array of text lines to display inside the box
+- `opts *BoxOptions`: Configuration options (can be nil for defaults)
+
+**Example:**
+```go
+opts := &box.BoxOptions{
+    Padding:     1,
+    BorderStyle: "double",
+    Indent:      2,
+}
+box.PrintBoxWithOptions(lines, opts)
+```
+
+#### `StringWidth(s string) int`
+Calculates the display width of a string, automatically filtering ANSI escape sequences. Useful for manual text layout.
+
+**Parameters:**
+- `s string`: The string to measure
+
+**Returns:**
+- `int`: The display width in columns
+
+**Example:**
+```go
+width := box.StringWidth("\x1b[31mRed Text\x1b[0m")
+// Returns 8 (width of "Red Text" without ANSI codes)
+```
+
+### Types
+
+#### `BoxOptions`
+Configuration options for custom box rendering.
+
+**Fields:**
+- `Padding int`: Number of empty padding lines inside the box (top and bottom)
+- `BorderStyle string`: Border style - "round" (default), "double", or "ascii"
+- `Indent int`: Number of spaces to indent the entire box from the left
+
+**Example:**
+```go
+opts := &box.BoxOptions{
+    Padding:     2,           // Add 2 empty lines above and below content
+    BorderStyle: "double",    // Use double-line borders
+    Indent:      4,           // Indent box by 4 spaces
+}
+```
+
+#### `DefaultBoxOptions()`
+Returns a BoxOptions struct with default values (round style, no padding, no indentation).
+
+**Returns:**
+- `*BoxOptions`: Pointer to default options
+
+**Example:**
+```go
+opts := box.DefaultBoxOptions()
+opts.Padding = 1
+box.PrintBoxWithOptions(lines, opts)
+```
+
+## Border Styles
+
+### Round (Default)
+Unicode box-drawing characters with rounded corners.
+```
+┌──────────┐
+│ Content  │
+└──────────┘
+```
+
+**Characters:** `─` (horizontal), `│` (vertical), `┌` (top-left), `┐` (top-right), `└` (bottom-left), `┘` (bottom-right)
+
+### Double
+Unicode double-line borders for a more prominent appearance.
+```
+╔══════════╗
+║ Content  ║
+╚══════════╝
+```
+
+**Characters:** `═` (horizontal), `║` (vertical), `╔` (top-left), `╗` (top-right), `╚` (bottom-left), `╝` (bottom-right)
+
+### ASCII
+Pure ASCII characters for maximum compatibility.
+```
++----------+
+| Content  |
++----------+
+```
+
+**Characters:** `-` (horizontal), `|` (vertical), `+` (corners)
+
+## Usage Examples
+
+### Basic Text Box
+```go
+package main
+
+import "github.com/afeiship/go-box"
+
+func main() {
+    lines := []string{
+        "Go-Box Library",
+        "Simple ASCII boxes",
+        "For CLI applications",
+    }
+    box.PrintBox(lines)
+}
+```
+
+### Colored Text with ANSI Codes
+```go
+coloredLines := []string{
+    "\x1b[31mError:\x1b[0m Something went wrong",
+    "\x1b[32mSuccess:\x1b[0m Operation completed",
+    "\x1b[34mInfo:\x1b[0m Processing data",
+    "\x1b[33mWarning:\x1b[0m Low memory",
+}
+box.PrintBox(coloredLines)
+```
+
+### Unicode and Emoji Support
+```go
+unicodeLines := []string{
+    "Hello World! 🌍",
+    "Success! ✅",
+    "Chinese: 你好世界",
+    "Japanese: こんにちは",
+    "Korean: 안녕하세요",
+    "Emoji: 🚀 ⭐ 🎉 💻",
+}
+box.PrintBox(unicodeLines)
+```
+
+### Advanced Configuration
+```go
+opts := &box.BoxOptions{
+    Padding:     1,
+    BorderStyle: "double",
+    Indent:      4,
+}
+lines := []string{
+    "Advanced Configuration",
+    "With padding and indentation",
+}
+box.PrintBoxWithOptions(lines, opts)
+```
+
+### Error Message Display
+```go
+showError := func(message string) {
+    lines := []string{
+        "\x1b[31m✗ ERROR\x1b[0m",
+        "",
+        message,
+    }
+    opts := &box.BoxOptions{
+        BorderStyle: "ascii",
+        Padding:     0,
+    }
+    box.PrintBoxWithOptions(lines, opts)
+}
+
+showError("Failed to connect to database")
+```
+
+### Success Message Display
+```go
+showSuccess := func(message string) {
+    lines := []string{
+        "\x1b[32m✓ SUCCESS\x1b[0m",
+        "",
+        message,
+    }
+    box.PrintBox(lines)
+}
+
+showSuccess("Build completed successfully!")
+```
+
+### Status Indicator
+```go
+showStatus := func(status, message string) {
+    var icon string
+    switch status {
+    case "running":
+        icon = "\x1b[33m⟳\x1b[0m"
+    case "done":
+        icon = "\x1b[32m✓\x1b[0m"
+    case "error":
+        icon = "\x1b[31m✗\x1b[0m"
+    }
+
+    lines := []string{
+        fmt.Sprintf("%s %s", icon, status),
+        message,
+    }
+    box.PrintBox(lines)
+}
+```
+
+## Common Use Cases
+
+### 1. Error Messages
+Display error messages with visual emphasis:
+```go
+errorLines := []string{
+    "\x1b[31m✗ ERROR\x1b[0m",
+    "",
+    "Failed to read configuration file",
+    "Please check file permissions",
+}
+opts := &box.BoxOptions{BorderStyle: "ascii"}
+box.PrintBoxWithOptions(errorLines, opts)
+```
+
+### 2. Success Messages
+Celebrate successful operations:
+```go
+successLines := []string{
+    "\x1b[32m✓ BUILD SUCCESS\x1b[0m",
+    "",
+    "All tests passed!",
+    "Ready to deploy",
+}
+box.PrintBox(successLines)
+```
+
+### 3. Help Text
+Present help information in an organized way:
+```go
+helpLines := []string{
+    "Usage: myapp [command] [options]",
+    "",
+    "Commands:",
+    "  build    - Build the project",
+    "  test     - Run tests",
+    "  deploy   - Deploy to production",
+    "",
+    "Options:",
+    "  -v       - Verbose output",
+    "  -h       - Show this help",
+}
+opts := &box.BoxOptions{Indent: 2}
+box.PrintBoxWithOptions(helpLines, opts)
+```
+
+### 4. Menu Systems
+Create interactive menu displays:
+```go
+menuLines := []string{
+    "\x1b[1mMain Menu\x1b[0m",
+    "",
+    "[1] Create new project",
+    "[2] Open existing project",
+    "[3] Settings",
+    "[4] Exit",
+    "",
+    "Enter your choice: ",
+}
+box.PrintBox(menuLines)
+```
+
+### 5. Code Display
+Show code snippets with proper formatting:
+```go
+codeLines := []string{
+    "func main() {",
+    "    fmt.Println(\"Hello, World!\")",
+    "}",
+}
+opts := &box.BoxOptions{
+    BorderStyle: "ascii",
+    Indent:      4,
+}
+box.PrintBoxWithOptions(codeLines, opts)
+```
+
+### 6. Progress Indicators
+Display step-by-step progress:
+```go
+steps := []string{
+    "\x1b[32m[✓]\x1b[0m Step 1: Initialize",
+    "\x1b[32m[✓]\x1b[0m Step 2: Download dependencies",
+    "\x1b[33m[⟳]\x1b[0m Step 3: Build project",
+    "[ ] Step 4: Run tests",
+}
+box.PrintBox(steps)
+```
+
+## Usage Notes for Agents
+
+### Unicode Character Handling
+- The library uses `github.com/mattn/go-runewidth` for accurate width calculation
+- Emojis (🚀, ✅, 🌟) are properly measured as 2 display columns
+- CJK characters (中文, 日本語, 한국어) are correctly handled as 2 display columns
+- Combining characters and zero-width characters are supported
+
+### ANSI Color Code Handling
+- ANSI escape sequences are automatically filtered during width calculation
+- Only SGR (Select Graphic Rendiment) sequences ending with 'm' are currently supported
+- Color codes do not affect box alignment
+- Common color codes: `\x1b[31m` (red), `\x1b[32m` (green), `\x1b[34m` (blue), `\x1b[0m` (reset)
+
+### Empty Input Handling
+- Empty slices (`[]string{}`) are handled gracefully - no output is produced
+- Slices with empty strings (`[]string{""}`) will create a box with a single empty line
+- Leading/trailing whitespace is preserved in the content
+
+### Border Style Selection
+- Default style is "round" when `BorderStyle` is empty or unrecognized
+- Style names are case-sensitive: use "round", "double", or "ascii"
+- Invalid style names fall back to "round" style
+
+### Width Calculation
+- Box width is determined by the longest line (after ANSI filtering)
+- Padding spaces are added automatically to align all lines
+- Unicode width calculation considers East Asian Wide characters
+- Tab characters are not expanded - use explicit spaces for alignment
+
+### Platform Considerations
+- All Unicode box characters render correctly on modern terminals
+- ASCII style is recommended for legacy terminals or Windows Console without Unicode support
+- Most terminal emulators on macOS and Linux support Unicode by default
+- Windows Terminal and PowerShell 5.1+ support Unicode box characters
+
+## Examples Directory
+
+The project includes comprehensive examples in the `examples/` directory:
+
+### Basic Examples (`examples/basic/`)
+- Simple text boxes
+- Colored text with ANSI codes
+- Unicode character handling
+
+### Advanced Examples (`examples/advanced/`)
+- Padding configuration
+- Indentation usage
+- Style combinations
+
+### Style Demonstrations (`examples/styles-demo/`)
+- All three border styles
+- Mixed Unicode and ANSI content
+
+### ASCII Demo (`examples/ascii-demo/`)
+- Pure ASCII boxes
+- Terminal compatibility testing
+
+### Emoji Test (`examples/emoji-test/`)
+- Comprehensive emoji alignment
+- International character support
+
+### Interactive Example (`examples/interactive/`)
+- Dynamic text input
+- Real-time style switching
+- User interaction patterns
+
+### Debug Tool (`examples/debug-box/`)
+- Width calculation visualization
+- Manual padding verification
+- Alignment troubleshooting
+
+## Development
+
+### Module Information
+- **Module Path:** `github.com/afeiship/go-box`
+- **Current Version:** 1.0.7
+- **Go Version:** 1.24+
+- **License:** MIT License
+
+### Project Structure
+```
+go-box/
+├── box.go                  # Main library source code
+├── go.mod                 # Go module definition
+├── go.sum                 # Dependencies checksums
+├── README.md              # Main documentation
+├── llms.txt               # This file - AI/LLM prompt documentation
+├── examples/              # Usage examples
+│   ├── basic/            # Basic usage patterns
+│   ├── advanced/         # Advanced configurations
+│   ├── styles-demo/      # Border style demonstrations
+│   ├── ascii-demo/       # ASCII-only examples
+│   ├── emoji-test/       # Unicode and emoji testing
+│   ├── interactive/      # Interactive CLI example
+│   └── debug-box/        # Debug and testing tools
+└── docs/
+    └── ai-usage-guide.md # Comprehensive AI usage guide
+```
+
+### Key Implementation Details
+- **ANSI Filtering:** Single-pass algorithm using state machine pattern
+- **Width Calculation:** Leverages `mattn/go-runewidth` for Unicode accuracy
+- **Box Rendering:** Efficient string building with `strings.Repeat()`
+- **Memory Usage:** Minimal allocation, uses `strings.Builder` for concatenation
+
+### Contributing
+Contributions are welcome! The project follows standard Go conventions:
+- Clear, readable code with comments
+- Comprehensive examples for new features
+- Cross-platform compatibility testing
+- Documentation updates for API changes
+
+### Performance Considerations
+- **Time Complexity:** O(n) where n is the total length of all input lines
+- **Space Complexity:** O(m) where m is the maximum line length
+- **Optimization:** ANSI filtering and width calculation are combined in a single pass
+- **Best Practice:** Pre-build multi-line content rather than calling functions repeatedly
+
+## Integration Tips
+
+### With Logging Libraries
+```go
+log.SetFlags(0)
+logFunc := func(msg string) {
+    lines := []string{"\x1b[35m[LOG]\x1b[0m", msg}
+    box.PrintBox(lines)
+}
+```
+
+### With CLI Frameworks
+```go
+import "github.com/spf13/cobra"
+
+var cmd = &cobra.Command{
+    Run: func(cmd *cobra.Command, args []string) {
+        lines := []string{"Command executed successfully"}
+        box.PrintBox(lines)
+    },
+}
+```
+
+### With Template Engines
+```go
+tmpl := `{{.Title}}
+{{.Message}}
+`
+// Parse template, execute, then box the result
+```
+
+## Troubleshooting
+
+### Common Issues
+
+**Issue:** Box borders appear misaligned
+- **Cause:** ANSI codes not properly filtered
+- **Solution:** Ensure ANSI sequences use SGR format (ending with 'm')
+
+**Issue:** Unicode characters display incorrectly
+- **Cause:** Terminal doesn't support Unicode
+- **Solution:** Use `PrintASCIIBox()` instead or upgrade terminal
+
+**Issue:** Width calculation seems wrong
+- **Cause:** Tab characters in input
+- **Solution:** Replace tabs with spaces before passing to box functions
+
+**Issue:** Box extends beyond terminal width
+- **Cause:** Content too wide for terminal
+- **Solution:** Implement text wrapping before calling box functions
+
+### Debug Tips
+- Use the `examples/debug-box/` tool to visualize width calculations
+- Test with `StringWidth()` function to verify character widths
+- Check terminal encoding (should be UTF-8)
+- Verify terminal supports Unicode box-drawing characters
+
+## Best Practices
+
+1. **Choose Appropriate Border Style:**
+   - Use "round" for modern terminals (default)
+   - Use "double" for emphasis or headers
+   - Use "ascii" for maximum compatibility
+
+2. **Handle Empty Input:**
+   - Always check if `lines` is empty before calling functions
+   - Provide default content for edge cases
+
+3. **Color Usage:**
+   - Always reset ANSI codes with `\x1b[0m`
+   - Use consistent color schemes (red=error, green=success, etc.)
+
+4. **Content Width:**
+   - Keep lines under 80 columns for traditional terminals
+   - Consider terminal width when generating dynamic content
+   - Implement text wrapping for long lines
+
+5. **Internationalization:**
+   - Test with various CJK characters
+   - Verify emoji alignment in your target terminals
+   - Consider user's locale when designing box content
